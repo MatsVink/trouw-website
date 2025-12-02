@@ -1,0 +1,25 @@
+# Node / npm
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Netlify build artifacts
+dist/
+build/
+.netlify/
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Data (RSVP exports e.d. die je lokaal genereert)
+data/*.csv
+
