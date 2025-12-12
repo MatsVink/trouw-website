@@ -80,7 +80,7 @@
         /* Header Sectie */
         header {
             height: 80vh;
-            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/PHOTO-2025-01-14-19-41-59(1).jpg');
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/IMG_9344.jpg');
             background-size: cover;
             background-position: center 40%;
             display: flex;
@@ -119,6 +119,76 @@
             gap: 30px;
             align-items: stretch;
         }
+
+        /* Programma sectie styling */
+        .program-section {
+            background: white;
+            text-align: center;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            margin: 30px 0 50px;
+        }
+
+        .program-section h2 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 22px;
+            font-size: 1.9rem;
+            position: relative;
+            display: inline-block;
+            padding: 0 18px;
+            background: linear-gradient(90deg, rgba(250,249,246,0), rgba(250,249,246,0));
+        }
+
+        .program-section h2:before,
+        .program-section h2:after {
+            content: "";
+            height: 1px;
+            width: 120px;
+            background: linear-gradient(90deg, transparent, rgba(166,123,91,0.6), transparent);
+            position: absolute;
+            top: 50%;
+        }
+
+        .program-section h2:before { left: -140px; }
+        .program-section h2:after { right: -140px; }
+
+        .program-section .schedule-layout { align-items: center; }
+
+        .program-section .photo-block {
+            flex: 1 1 320px;
+            margin: 0;
+            display: flex;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+        .program-section .photo-block img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            display: block;
+        }
+
+        .program-section .photo-block img:hover {
+            transform: scale(1.03);
+        }
+
+        .program-section .schedule-wrapper { flex: 1 1 380px; }
+
+        .program-section .schedule-item {
+            background: linear-gradient(180deg, #fff, #fbfaf8);
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .program-section .time { font-size: 1.15rem; }
 
         .schedule-layout .schedule-wrapper {
             flex: 1 1 350px;
@@ -305,41 +375,43 @@
                 <img src="images/PHOTO-2025-01-14-19-41-58.jpg" alt="Ring" style="width: 150px; border-radius: 50%; margin-top: 20px;">
             </div>
 
-            <h2 style="text-align: center;">Programma</h2>
-            
-            <div class="schedule-layout">
-                <div class="schedule-wrapper" id="schedule-container">
-                    <div class="schedule-item">
-                        <div class="time">13:45</div>
-                        <div><strong>Inloop</strong> <br> Wees welkom in de Jeruzalemkerk.</div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="time">14:00</div>
-                        <div><strong>Kerkdienst</strong> <br> De huwelijksvoltrekking & inzegening.</div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="time">15:30</div>
-                        <div><strong>Receptie</strong> <br> Tijd voor felicitaties, koffie en taart!</div>
+            <section class="program-section">
+                <h2>Programma</h2>
+
+                <div class="schedule-layout">
+                    <div class="schedule-wrapper" id="schedule-container">
+                        <div class="schedule-item">
+                            <div class="time">13:45</div>
+                            <div><strong>Inloop</strong> <br> Wees welkom in de Jeruzalemkerk.</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="time">14:00</div>
+                            <div><strong>Kerkdienst</strong> <br> De huwelijksvoltrekking & inzegening.</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="time">15:30</div>
+                            <div><strong>Receptie</strong> <br> Tijd voor felicitaties, koffie en taart!</div>
+                        </div>
+
+                        <div class="schedule-item only-dag">
+                            <div class="time">17:30</div>
+                            <div><strong>Inloop Feestlocatie</strong> <br> We verplaatsen ons naar Dalfsen.</div>
+                        </div>
+                        <div class="schedule-item only-dag">
+                            <div class="time">18:30 - 20:30</div>
+                            <div><strong>Diner</strong> <br> Lekker eten met elkaar.</div>
+                        </div>
+                        <div class="schedule-item only-dag">
+                            <div class="time">20:30 - 23:00</div>
+                            <div><strong>Feest!</strong> <br> Silent disco, kampvuur & buiten spellen.</div>
+                        </div>
                     </div>
 
-                    <div class="schedule-item only-dag">
-                        <div class="time">17:30</div>
-                        <div><strong>Inloop Feestlocatie</strong> <br> We verplaatsen ons naar Dalfsen.</div>
-                    </div>
-                    <div class="schedule-item only-dag">
-                        <div class="time">18:30 - 20:30</div>
-                        <div><strong>Diner</strong> <br> Lekker eten met elkaar.</div>
-                    </div>
-                    <div class="schedule-item only-dag">
-                        <div class="time">20:30 - 23:00</div>
-                        <div><strong>Feest!</strong> <br> Silent disco, kampvuur & buiten spellen.</div>
+                    <div class="photo-block" aria-hidden="true">
+                        <img src="images/foto-programma.jpg" alt="Foto van het programma">
                     </div>
                 </div>
-
-                <div class="photo-block">
-                    <img src="images/PHOTO-2025-01-14-19-41-59.jpg" alt="Aanzoek van Joy en Janick">
-                </div>
-            </div>
+            </section>
 
             <h2 style="text-align: center;">Locaties</h2>
             
@@ -355,7 +427,12 @@
                     <video class="location-media" src="images/intgroen-video.mp4" autoplay muted loop playsinline poster="images/PHOTO-2025-01-14-19-41-58.jpg"></video>
                     <h3>Diner & Feest</h3>
                     <p><strong>In 't Groen Recreatie</strong><br>Poppenallee 24<br>7722 KX Dalfsen</p>
-                    <a href="https://intgroenrecreatie.nl/" target="_blank" style="color: var(--primary-color);">Bekijk de locatie &rarr;</a>
+                    
+                    <p style="font-size: 0.9rem; color: #555; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
+                        <em><strong>Parkeren:</strong> Dit kan langs de oprit en langs de vijver.<br>Let op: houd het pad naar de buren vrij.</em>
+                    </p>
+
+                    <a href="https://intgroenrecreatie.nl/" target="_blank" style="color: var(--primary-color);">Bekijk de locatie →</a>
                 </div>
             </div>
 
@@ -369,9 +446,9 @@
                     
                     <a href="https://chat.whatsapp.com/Gdni0XmuhRMKCb33on2wtW" target="_blank" class="action-btn">🚗 Carpool Chat</a>
                     
-                    <a href="https://open.spotify.com/artist/0YzGoANjvJ8RY1Hp9AKNg6?flow_ctx=812d7f1a-e07b-4550-b0e3-73d49941559f%3A1764350299" target="_blank" class="action-btn only-dag">🎵 Luister alvast naar LEV</a>
+                    <a href="https://open.spotify.com/artist/0YzGoANjvJ8RY1Hp9AKNg6?flow_ctx=812d7f1a-e07b-4550-b0e3-73d49941559f%3A1764350299" target="_blank" class="action-btn">🎵 Luister alvast naar LEV</a>
                     
-                    <a href="https://intgroenrecreatie.nl/" target="_blank" class="action-btn only-dag">⛺ Boek een kampeerplaats</a>
+                    <a href="kamperen.html" class="action-btn only-dag">⛺ Boek een kampeerplaats</a>
                 </div>
             </div>
 

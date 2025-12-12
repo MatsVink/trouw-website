@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamperen - Joy & Janick</title>
+    <link rel="icon" type="image/jpeg" href="images/PHOTO-2025-01-14-19-41-58.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #A67B5B;
+            --bg-color: #FAF9F6;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Header in dezelfde stijl als cadeautips, maar dan met de foto achtergrond van index */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Stijl van de blokken (zoals cadeautips) */
+        .info-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .info-card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .info-card ul {
+            padding-left: 20px;
+        }
+        
+        .info-card li {
+            margin-bottom: 10px;
+        }
+
+        /* Stijl voor het mail-kopieer gedeelte */
+        .email-box {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            color: #555;
+        }
+
+        .action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Lato', sans-serif;
+            font-weight: bold;
+            display: inline-block;
+            transition: opacity 0.3s;
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <p style="letter-spacing: 3px; text-transform: uppercase; font-size: 0.9rem;">Bruiloft Joy & Janick</p>
+        <h1>Blijven jullie slapen?</h1>
+        <p>Kamperen bij In 't Groen Recreatie</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="info-card">
+            <h2>Praktische Informatie</h2>
+            <p>Wat leuk als jullie blijven slapen! De feestlocatie is ook een camping. Speciaal voor onze bruiloft is de camping gereserveerd voor onze gasten voor de nacht van <strong>15 op 16 mei</strong>.</p>
+            
+            <ul>
+                <li><strong>Let op:</strong> Omdat de locatie voor ons is gereserveerd, lijkt het in het online boekingssysteem alsof alles vol zit ("dichtgegooid"). Je kunt daarom alleen <strong>per mail</strong> reserveren.</li>
+                <li><strong>Hemelvaart:</strong> Omdat het tijdens het Hemelvaartsweekend is, vinden de eigenaren het extra gezellig (en handig) als gasten waar mogelijk meerdere nachten blijven. Maak er gerust een lang weekend van!</li>
+                <li><strong>Prijzen:</strong> De actuele prijzen voor de kampeerplekken vind je op <a href="https://intgroenrecreatie.nl/" target="_blank" style="color: var(--primary-color);">intgroenrecreatie.nl</a>.</li>
+            </ul>
+        </div>
+
+        <div class="info-card">
+            <h2>Reserveer je plekje</h2>
+            <p>Stuur een mailtje naar <strong>info@intgroenrecreatie.nl</strong> om je plek vast te leggen. Vergeet niet <em>#bruiloft J&J</em> te vermelden, zodat ze weten dat je bij ons hoort.</p>
+            
+            <p>Je kunt onderstaand bericht kopiëren en invullen:</p>
+
+            <textarea id="mailContent" style="display:none;">Hoi team In 't Groen,
+
+Graag wil ik een kampeerplaats reserveren voor de bruiloft van Joy & Janick.
+
+- Aantal nachten: [vul in]
+- Aantal personen: [vul in]
+- Kampeermiddel: [Camper / Tent / Mini Caravan / Slapen in auto]
+- Kenmerk: #bruiloft J&J
+
+Alvast bedankt!</textarea>
+
+            <div class="email-box" id="previewBox">Hoi team In 't Groen,
+
+Graag wil ik een kampeerplaats reserveren voor de bruiloft van Joy & Janick.
+
+- Aantal nachten: [vul in]
+- Aantal personen: [vul in]
+- Kampeermiddel: [Camper / Tent / Mini Caravan / Slapen in auto]
+- Kenmerk: #bruiloft J&J
+
+Alvast bedankt!</div>
+
+            <button onclick="copyMail()" class="action-btn" id="copyBtn">Kopieer tekst</button>
+            <span id="copyConfirm" style="color: green; font-weight: bold; margin-left: 10px; display: none;">Gekopieerd!</span>
+        </div>
+
+        <a href="index.html" class="back-link">&larr; Terug naar de trouwsite</a>
+    </div>
+
+    <footer>
+        Met liefde geschreven voor Joy & Janick
+    </footer>
+
+    <script>
+        function copyMail() {
+            var copyText = document.getElementById("mailContent");
+            var textToCopy = copyText.value;
+            
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                var btn = document.getElementById("copyBtn");
+                var confirmMsg = document.getElementById("copyConfirm");
+                
+                confirmMsg.style.display = "inline";
+                setTimeout(function() {
+                    confirmMsg.style.display = "none";
+                }, 3000);
+            }, function(err) {
+                console.error('Kon tekst niet kopiëren: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
