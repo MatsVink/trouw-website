@@ -1,6 +1,7 @@
 ## Trouwsite Joy & Janick
 
 Een eenvoudige, statische trouwwebsite voor Joy & Janick, gehost op Netlify.
+link: bruiloftjoyenjanick.netlify.app
 
 ### Functionaliteit
 
