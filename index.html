@@ -371,7 +371,7 @@
         <div class="container">
             <div style="text-align: center; margin-bottom: 50px;">
                 <h2>Lieve familie & vrienden,</h2>
-                <p>Wat leuk dat jullie hier zijn. Via deze pagina houden we jullie op de hoogte van alle details voor onze grote dag van Joy en Janick.</p>
+                <p>Wat leuk dat jullie hier zijn. Via deze pagina houden we jullie op de hoogte van alle details over de grote dag van Joy en Janick.</p>
                 <img src="images/PHOTO-2025-01-14-19-41-58.jpg" alt="Ring" style="width: 150px; border-radius: 50%; margin-top: 20px;">
             </div>
 
@@ -381,20 +381,20 @@
                 <div class="schedule-layout">
                     <div class="schedule-wrapper" id="schedule-container">
                         <div class="schedule-item">
-                            <div class="time">13:45</div>
-                            <div><strong>Inloop</strong> <br> Wees welkom in de Jeruzalemkerk.</div>
+                            <div class="time">13:30</div>
+                            <div><strong>Inloop</strong> <br> Wees welkom in de Jeruzalemkerk. De deuren zijn vanaf 13:30 open.</div>
                         </div>
                         <div class="schedule-item">
                             <div class="time">14:00</div>
                             <div><strong>Kerkdienst</strong> <br> De huwelijksvoltrekking & inzegening.</div>
                         </div>
                         <div class="schedule-item">
-                            <div class="time">15:30</div>
+                            <div class="time">15:30 - 18:00</div>
                             <div><strong>Receptie</strong> <br> Tijd voor felicitaties, koffie en taart!</div>
                         </div>
 
                         <div class="schedule-item only-dag">
-                            <div class="time">17:30</div>
+                            <div class="time">17:30 - 18:00</div>
                             <div><strong>Inloop Feestlocatie</strong> <br> We verplaatsen ons naar Dalfsen.</div>
                         </div>
                         <div class="schedule-item only-dag">
@@ -446,7 +446,7 @@
                     
                     <a href="https://chat.whatsapp.com/Gdni0XmuhRMKCb33on2wtW" target="_blank" class="action-btn">🚗 Carpool Chat</a>
                     
-                    <a href="https://open.spotify.com/artist/0YzGoANjvJ8RY1Hp9AKNg6?flow_ctx=812d7f1a-e07b-4550-b0e3-73d49941559f%3A1764350299" target="_blank" class="action-btn">🎵 Luister alvast naar LEV</a>
+                    <a href="https://open.spotify.com/playlist/0IvS11mgMWw4SHkrUdMo0K?si=tKoaua48TKqPZq_kMJjtxw&pi=Gww2N6KTTq-i8" target="_blank" class="action-btn">🎵 Luister alvast naar de trouwplaylist</a>
                     
                     <a href="kamperen.html" class="action-btn only-dag">⛺ Boek een kampeerplaats</a>
                 </div>
@@ -465,6 +465,7 @@
             <h2>RSVP Joy & Janick</h2>
             <form id="rsvp-form" name="rsvp" method="POST" data-netlify="true">
                 <input type="hidden" name="form-name" value="rsvp" />
+                <input type="hidden" id="gasttype" name="gasttype" value="" />
                 <label for="naam">Naam</label>
                 <input type="text" id="naam" name="naam" required>
 
@@ -549,6 +550,10 @@
         function toggleRsvpModal(show) {
             if (modal) {
                 modal.style.display = show ? 'flex' : 'none';
+                if (show) {
+                    var guestType = localStorage.getItem('guestType') || '';
+                    document.getElementById('gasttype').value = guestType === 'dag' ? 'Daggast' : (guestType === 'kerk' ? 'Kerkgast' : '');
+                }
                 if (!show) {
                     statusBox.textContent = '';
                     rsvpForm.reset();
