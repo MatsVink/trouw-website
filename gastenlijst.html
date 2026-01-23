@@ -3,87 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gastenlijst - Joy & Janick</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Admin - Joy & Janick</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Lato', sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; background: #FAF9F6; }
-        h1 { color: #A67B5B; }
-        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
-        th { background-color: #A67B5B; color: white; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        .totaal-box { background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px; font-weight: bold; }
+        :root {
+            --primary: #A67B5B;
+            --primary-dark: #8c664b;
+            --bg: #FAF9F6;
+            --white: #ffffff;
+            --text: #333;
+            --success: #e6f4ea;
+            --success-text: #1e7e34;
+            --neutral: #f1f3f4;
+        }
+
+        body { 
+            font-family: 'Lato', sans-serif; 
+            background: var(--bg); 
+            color: var(--text);
+            margin: 0; 
+            padding: 20px; 
+        }
+
+        /* Navigatie */
+        .top-bar {
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .back-btn:hover { color: var(--primary-dark); }
+
+        h1 { 
+            font-family: 'Playfair Display', serif; 
+            color: var(--primary); 
+            margin: 0;
+        }
+
+        /* Login Scherm */
+        #login-box {
+            background: var(--white);
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        input[type="password"] {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 70%;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background: var(--primary-dark); }
+
+        /* Dashboard Stats */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+        .stat-number { font-size: 2em; font-weight: 700; color: var(--primary); display: block; }
+        .stat-label { color: #666; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Controls (Zoeken & Filter) */
+        .controls {
+            max-width: 1000px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        #searchInput {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .filter-btn {
+            background: white;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Tabel Design */
+        .table-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto; /* Belangrijk voor mobiel */
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        
+        thead { background: var(--primary); color: white; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { font-weight: 600; letter-spacing: 0.5px; }
+        
+        /* Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .badge-ja { background: var(--success); color: var(--success-text); }
+        .badge-nee { background: var(--neutral); color: #777; }
+        .badge-type { background: #fff0e3; color: var(--primary); border: 1px solid #e3d0c2; }
+
+        .opmerking-text { font-style: italic; color: #666; font-size: 0.9em; margin-top: 4px; }
+        .dieet-badge { color: #d9534f; font-weight: bold; font-size: 0.9em; }
+
+        /* Mobiel aanpassingen */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5em; }
+            .stat-card { padding: 10px; }
+            .stat-number { font-size: 1.5em; }
+        }
     </style>
 </head>
 <body>
-    <h1>Gastenlijst Overzicht</h1>
-    
+
+    <div class="top-bar">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Terug naar website</a>
+        <h1>Gastenlijst</h1>
+    </div>
+
     <div id="login-box">
-        <p>Voer de geheime code in:</p>
-        <input type="password" id="secretCode" placeholder="Code...">
-        <button onclick="laadGasten()">Bekijk lijst</button>
+        <i class="fas fa-lock" style="font-size: 2em; color: var(--primary); margin-bottom: 15px;"></i>
+        <h2 style="margin-top:0;">Beveiligde toegang</h2>
+        <p>Voer het wachtwoord in om de RSVPs te bekijken.</p>
+        <input type="password" id="secretCode" placeholder="Wachtwoord...">
+        <br>
+        <button onclick="laadGasten()">Toon Gasten</button>
+        <p id="errorMsg" style="color: red; display: none; margin-top: 10px;">Fout wachtwoord!</p>
     </div>
 
     <div id="data-content" style="display:none;">
-        <div class="totaal-box" id="teller">Laden...</div>
-        <table id="gastenTable">
-            <thead>
-                <tr>
-                    <th>Type</th> 
-                    <th>Naam</th>
-                    <th>Aanwezig</th>
-                    <th>Aantal</th>
-                    <th>Dieet / Opmerking</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <span class="stat-number" id="count-total">0</span>
+                <span class="stat-label">Totaal Personen (Ja)</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="count-dag">0</span>
+                <span class="stat-label">Daggasten</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="count-kerk">0</span>
+                <span class="stat-label">Kerkgasten</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="count-afmelding">0</span>
+                <span class="stat-label" style="color:#888;">Afmeldingen</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Zoek op naam..." onkeyup="filterTabel()">
+            <button class="filter-btn active" onclick="setFilter('all', this)">Alles</button>
+            <button class="filter-btn" onclick="setFilter('dag', this)">Alleen Dag</button>
+            <button class="filter-btn" onclick="setFilter('kerk', this)">Alleen Kerk</button>
+            <button class="filter-btn" onclick="setFilter('dieet', this)">Dieetwensen</button>
+        </div>
+
+        <div class="table-container">
+            <table id="gastenTable">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Naam</th>
+                        <th>Status</th>
+                        <th>Aantal</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <p style="text-align: center; color: #999; margin-top: 20px; font-size: 0.8em;">Data wordt live opgehaald uit de database.</p>
     </div>
 
     <script>
+        let alleGasten = []; // Hier slaan we de data lokaal in op
+        let huidigFilter = 'all';
+
         function laadGasten() {
             const code = document.getElementById('secretCode').value;
+            const btn = document.querySelector('#login-box button');
+            btn.innerText = "Laden...";
             
-            // Haal data op van de functie met de geheime code
             fetch(`/.netlify/functions/rsvp?secret=${code}`)
                 .then(res => {
-                    if (res.status === 401) throw new Error("Foute code!");
+                    if (res.status === 401) throw new Error("Foute code");
                     return res.json();
                 })
                 .then(data => {
+                    alleGasten = data; // Sla data op
                     document.getElementById('login-box').style.display = 'none';
                     document.getElementById('data-content').style.display = 'block';
-                    
-                    const tbody = document.getElementById('tableBody');
-                    let totaalGasten = 0;
-                    let totaalAanmeldingen = 0;
-
-                    data.forEach(rij => {
-                        const tr = document.createElement('tr');
-                        
-                        // Tel alleen als ze 'Ja' hebben gezegd
-                        let aantal = rij.aantal_personen ? parseInt(rij.aantal_personen) : 0;
-                        if(rij.aanwezig.toLowerCase().includes('ja')) {
-                            totaalGasten += aantal;
-                            totaalAanmeldingen++;
-                        }
-
-                        tr.innerHTML = `
-                            <td><small>${rij.gasttype || ''}</small></td> <td><strong>${rij.naam}</strong></td>
-                            <td>${rij.aanwezig}</td>
-                            <td>${rij.aantal_personen || '-'}</td>
-                            <td>
-                                ${rij.dieetwensen ? '🍽️ ' + rij.dieetwensen + '<br>' : ''}
-                                ${rij.opmerking ? '💬 ' + rij.opmerking : ''}
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-
-                    document.getElementById('teller').innerText = 
-                        `Totaal 'Ja': ${totaalAanmeldingen} inschrijvingen (${totaalGasten} personen)`;
+                    updateDashboard();
+                    renderTabel(data);
                 })
-                .catch(err => alert(err.message));
+                .catch(err => {
+                    document.getElementById('errorMsg').style.display = 'block';
+                    btn.innerText = "Toon Gasten";
+                });
+        }
+
+        function updateDashboard() {
+            let totaal = 0;
+            let dag = 0;
+            let kerk = 0;
+            let afmeldingen = 0;
+
+            alleGasten.forEach(g => {
+                const isAanwezig = g.aanwezig.toLowerCase().includes('ja');
+                const aantal = g.aantal_personen ? parseInt(g.aantal_personen) : 0;
+                const type = (g.gasttype || '').toLowerCase();
+
+                if (isAanwezig) {
+                    totaal += aantal;
+                    if (type.includes('dag')) dag += aantal;
+                    else kerk += aantal; // We nemen aan dat de rest kerk/receptie is
+                } else {
+                    afmeldingen++;
+                }
+            });
+
+            document.getElementById('count-total').innerText = totaal;
+            document.getElementById('count-dag').innerText = dag;
+            document.getElementById('count-kerk').innerText = kerk;
+            document.getElementById('count-afmelding').innerText = afmeldingen;
+        }
+
+        function renderTabel(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(rij => {
+                const tr = document.createElement('tr');
+                const isAanwezig = rij.aanwezig.toLowerCase().includes('ja');
+                
+                // Bepaal badges
+                const statusBadge = isAanwezig 
+                    ? `<span class="badge badge-ja"><i class="fas fa-check"></i> Aanwezig</span>` 
+                    : `<span class="badge badge-nee">Afwezig</span>`;
+                
+                const typeBadge = `<span class="badge badge-type">${rij.gasttype || 'Onbekend'}</span>`;
+
+                // Dieet & Opmerking opmaak
+                let details = '';
+                if(rij.dieetwensen) details += `<div class="dieet-badge"><i class="fas fa-utensils"></i> ${rij.dieetwensen}</div>`;
+                if(rij.opmerking) details += `<div class="opmerking-text">"${rij.opmerking}"</div>`;
+                if(!details) details = '<span style="color:#ccc">-</span>';
+
+                tr.innerHTML = `
+                    <td>${typeBadge}</td>
+                    <td><strong>${rij.naam}</strong></td>
+                    <td>${statusBadge}</td>
+                    <td>${isAanwezig ? rij.aantal_personen : '-'}</td>
+                    <td>${details}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTabel() {
+            const zoekTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            const gefilterd = alleGasten.filter(g => {
+                // 1. Zoekfilter
+                const matchZoek = g.naam.toLowerCase().includes(zoekTerm) || 
+                                  (g.dieetwensen && g.dieetwensen.toLowerCase().includes(zoekTerm));
+
+                // 2. Categorie filter
+                let matchCat = true;
+                const type = (g.gasttype || '').toLowerCase();
+                const aanwezig = g.aanwezig.toLowerCase().includes('ja');
+
+                if (huidigFilter === 'dag') matchCat = type.includes('dag') && aanwezig;
+                if (huidigFilter === 'kerk') matchCat = !type.includes('dag') && aanwezig;
+                if (huidigFilter === 'dieet') matchCat = (g.dieetwensen && g.dieetwensen.length > 0) && aanwezig;
+
+                return matchZoek && matchCat;
+            });
+
+            renderTabel(gefilterd);
+        }
+
+        function setFilter(filterType, btn) {
+            huidigFilter = filterType;
+            
+            // Update knop styles
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            filterTabel(); // Herlaad tabel
         }
     </script>
 </body>
