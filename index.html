@@ -456,6 +456,7 @@
 
         <footer>
             <p>Gemaakt met liefde voor Joy & Janick</p>
+            <a href="gastenlijst.html" class="action-btn">📋 Bekijk de gastenlijst</a>
         </footer>
     </div>
 
@@ -463,7 +464,7 @@
         <div class="modal-content">
             <button class="close-modal" type="button" aria-label="Sluiten" onclick="toggleRsvpModal(false)">&times;</button>
             <h2>RSVP Joy & Janick</h2>
-            <form id="rsvp-form" name="rsvp" method="POST" data-netlify="true">
+            <form id="rsvp-form" name="rsvp" method="POST">
                 <input type="hidden" name="form-name" value="rsvp" />
                 <input type="hidden" id="gasttype" name="gasttype" value="" />
                 <label for="naam">Naam</label>
@@ -566,20 +567,27 @@
                 e.preventDefault();
                 statusBox.textContent = 'Bezig met versturen...';
 
+                // Maak een net object van de data
                 const formData = new FormData(rsvpForm);
-                const payload = new URLSearchParams(formData).toString();
+                const data = Object.fromEntries(formData.entries());
 
-                fetch("/", {
+                // Stuur naar je nieuwe Netlify Functie
+                fetch("/.netlify/functions/rsvp", {
                     method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: payload
+                    body: JSON.stringify(data)
                 })
-                .then(function () {
-                    statusBox.textContent = 'RSVP ontvangen, dankjewel!';
-                    rsvpForm.reset();
+                .then(response => {
+                    if (response.ok) {
+                        statusBox.textContent = 'RSVP ontvangen, dankjewel!';
+                        statusBox.style.color = "green";
+                        rsvpForm.reset();
+                    } else {
+                        throw new Error('Er ging iets mis bij de server.');
+                    }
                 })
                 .catch(function (error) {
                     statusBox.textContent = 'Er ging iets mis: ' + error;
+                    statusBox.style.color = "red";
                 });
             });
         }
