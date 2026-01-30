@@ -62,5 +62,80 @@ exports.handler = async (event, context) => {
         };
     }
 
+    // 3. RESERVERING AANPASSEN (PUT request vanuit gastenlijst.html)
+    if (event.httpMethod === 'PUT') {
+        try {
+            const secret = event.queryStringParameters.secret;
+            
+            // Beveiliging: alleen admins mogen aanpassen
+            if (secret !== process.env.ADMIN_SECRET) {
+                return { statusCode: 401, body: "Geen toegang" };
+            }
+
+            const data = JSON.parse(event.body);
+            const id = data.id;
+
+            if (!id) {
+                return { statusCode: 400, body: JSON.stringify({ error: "ID is verplicht" }) };
+            }
+
+            // Veilig omzetten van tekst naar nummer
+            const aantal = data.aantal_personen ? parseInt(data.aantal_personen) : 0;
+
+            const { error } = await supabase
+                .from('rsvps')
+                .update({
+                    naam: data.naam,
+                    gasttype: data.gasttype,
+                    aanwezig: data.aanwezig,
+                    aantal_personen: aantal,
+                    dieetwensen: data.dieetwensen,
+                    opmerking: data.opmerking
+                })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ message: "Reservering succesvol aangepast!" })
+            };
+        } catch (err) {
+            return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+        }
+    }
+
+    // 4. RESERVERING VERWIJDEREN (DELETE request vanuit gastenlijst.html)
+    if (event.httpMethod === 'DELETE') {
+        try {
+            const secret = event.queryStringParameters.secret;
+            
+            if (secret !== process.env.ADMIN_SECRET) {
+                return { statusCode: 401, body: "Geen toegang" };
+            }
+
+            const data = JSON.parse(event.body);
+            const id = data.id;
+
+            if (!id) {
+                return { statusCode: 400, body: JSON.stringify({ error: "ID is verplicht" }) };
+            }
+
+            const { error } = await supabase
+                .from('rsvps')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ message: "Reservering verwijderd!" })
+            };
+        } catch (err) {
+            return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+        }
+    }
+
     return { statusCode: 405, body: 'Method Not Allowed' };
 };

@@ -161,6 +161,97 @@
         .opmerking-text { font-style: italic; color: #666; font-size: 0.9em; margin-top: 4px; }
         .dieet-badge { color: #d9534f; font-weight: bold; font-size: 0.9em; }
 
+        /* Actie knoppen */
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        .edit-btn { color: var(--primary); }
+        .edit-btn:hover { background: #fff0e3; }
+        .delete-btn { color: #d9534f; }
+        .delete-btn:hover { background: #ffeaea; }
+
+        /* Modal Styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .btn-cancel {
+            background: #eee;
+            color: #666;
+        }
+        .btn-cancel:hover { background: #ddd; }
+        .btn-save {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-save:hover { background: var(--primary-dark); }
+
         /* Mobiel aanpassingen */
         @media (max-width: 600px) {
             h1 { font-size: 1.5em; }
@@ -224,6 +315,7 @@
                         <th>Status</th>
                         <th>Aantal</th>
                         <th>Details</th>
+                        <th>Acties</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -232,9 +324,59 @@
         <p style="text-align: center; color: #999; margin-top: 20px; font-size: 0.8em;">Data wordt live opgehaald uit de database.</p>
     </div>
 
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h2><i class="fas fa-edit"></i> Reservering Aanpassen</h2>
+            <input type="hidden" id="edit-id">
+            
+            <div class="form-group">
+                <label for="edit-naam">Naam</label>
+                <input type="text" id="edit-naam" placeholder="Volledige naam">
+            </div>
+
+            <div class="form-group">
+                <label for="edit-gasttype">Type Gast</label>
+                <select id="edit-gasttype">
+                    <option value="Daggast">Daggast (hele dag)</option>
+                    <option value="Kerk + Receptie">Kerk + Receptie</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-aanwezig">Aanwezigheid</label>
+                <select id="edit-aanwezig">
+                    <option value="Ja, ik kom!">Ja, ik kom!</option>
+                    <option value="Nee, helaas niet">Nee, helaas niet</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-aantal">Aantal personen</label>
+                <input type="number" id="edit-aantal" min="0" max="20" placeholder="0">
+            </div>
+
+            <div class="form-group">
+                <label for="edit-dieet">Dieetwensen</label>
+                <input type="text" id="edit-dieet" placeholder="Bijv. vegetarisch, glutenvrij...">
+            </div>
+
+            <div class="form-group">
+                <label for="edit-opmerking">Opmerking</label>
+                <textarea id="edit-opmerking" placeholder="Extra informatie..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="sluitModal()">Annuleren</button>
+                <button class="btn-save" onclick="opslaanWijziging()"><i class="fas fa-save"></i> Opslaan</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let alleGasten = []; // Hier slaan we de data lokaal in op
         let huidigFilter = 'all';
+        let adminSecret = ''; // Bewaar het wachtwoord voor API calls
 
         function laadGasten() {
             const code = document.getElementById('secretCode').value;
@@ -248,6 +390,7 @@
                 })
                 .then(data => {
                     alleGasten = data; // Sla data op
+                    adminSecret = code; // Bewaar het wachtwoord
                     document.getElementById('login-box').style.display = 'none';
                     document.getElementById('data-content').style.display = 'block';
                     updateDashboard();
@@ -312,10 +455,117 @@
                     <td>${statusBadge}</td>
                     <td>${isAanwezig ? rij.aantal_personen : '-'}</td>
                     <td>${details}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="openEditModal(${rij.id})" title="Bewerken">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="verwijderReservering(${rij.id}, '${rij.naam.replace(/'/g, "\\'")}')" title="Verwijderen">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
+
+        // === EDIT FUNCTIES ===
+        function openEditModal(id) {
+            const gast = alleGasten.find(g => g.id === id);
+            if (!gast) return;
+
+            document.getElementById('edit-id').value = gast.id;
+            document.getElementById('edit-naam').value = gast.naam || '';
+            document.getElementById('edit-gasttype').value = gast.gasttype || 'Daggast';
+            document.getElementById('edit-aanwezig').value = gast.aanwezig || 'Ja, ik kom!';
+            document.getElementById('edit-aantal').value = gast.aantal_personen || 0;
+            document.getElementById('edit-dieet').value = gast.dieetwensen || '';
+            document.getElementById('edit-opmerking').value = gast.opmerking || '';
+
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function sluitModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        async function opslaanWijziging() {
+            const saveBtn = document.querySelector('.btn-save');
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opslaan...';
+            saveBtn.disabled = true;
+
+            const data = {
+                id: parseInt(document.getElementById('edit-id').value),
+                naam: document.getElementById('edit-naam').value,
+                gasttype: document.getElementById('edit-gasttype').value,
+                aanwezig: document.getElementById('edit-aanwezig').value,
+                aantal_personen: document.getElementById('edit-aantal').value,
+                dieetwensen: document.getElementById('edit-dieet').value,
+                opmerking: document.getElementById('edit-opmerking').value
+            };
+
+            try {
+                const response = await fetch(`/.netlify/functions/rsvp?secret=${adminSecret}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) throw new Error('Fout bij opslaan');
+
+                // Update lokale data
+                const index = alleGasten.findIndex(g => g.id === data.id);
+                if (index !== -1) {
+                    alleGasten[index] = { ...alleGasten[index], ...data };
+                }
+
+                sluitModal();
+                updateDashboard();
+                filterTabel(); // Herlaad met huidige filter
+                
+                alert('Reservering succesvol aangepast!');
+            } catch (err) {
+                alert('Er ging iets mis: ' + err.message);
+            } finally {
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Opslaan';
+                saveBtn.disabled = false;
+            }
+        }
+
+        async function verwijderReservering(id, naam) {
+            if (!confirm(`Weet je zeker dat je de reservering van "${naam}" wilt verwijderen?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/.netlify/functions/rsvp?secret=${adminSecret}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                if (!response.ok) throw new Error('Fout bij verwijderen');
+
+                // Verwijder uit lokale data
+                alleGasten = alleGasten.filter(g => g.id !== id);
+                
+                updateDashboard();
+                filterTabel();
+                
+                alert('Reservering verwijderd!');
+            } catch (err) {
+                alert('Er ging iets mis: ' + err.message);
+            }
+        }
+
+        // Sluit modal bij klikken buiten de modal
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) sluitModal();
+        });
+
+        // Sluit modal met Escape toets
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') sluitModal();
+        });
 
         function filterTabel() {
             const zoekTerm = document.getElementById('searchInput').value.toLowerCase();
